@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgages with Bailey | Bailey Bucher, FSRA Mortgage Agent</title>
+    <meta name="description" content="Expert mortgage services in Ontario by Bailey Bucher. Get the best rates for first-time buyers, refinancing, and renewals. Contact me for a free consultation.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons for premium aesthetic -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="ph ph-house-line"></i>
+                <span>Mortgages with Bailey</span>
+            </div>
+            <div class="nav-links">
+                <a href="#services">Services</a>
+                <a href="#calculator">Calculator</a>
+                <a href="#blog">Blog</a>
+                <a href="#why-us">Why Us</a>
+            </div>
+            <a href="https://breezeful.com/brokerage-agent/bailey-bucher" target="_blank" class="btn btn-primary">Start Application</a>
+            <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="badge">FSRA Mortgage Agent Level 1 - License #M22004070</span>
+                <h1>Navigating Ontario's Mortgage Market With You</h1>
+                <p>Unlock the best rates and personalized mortgage solutions tailored for your unique financial goals. Whether you're a first-time buyer or refinancing, I'm here to guide you.</p>
+                <div class="hero-actions">
+                    <a href="https://breezeful.com/brokerage-agent/bailey-bucher" target="_blank" class="btn btn-primary btn-large">Apply Now</a>
+                    <a href="#contact" class="btn btn-secondary btn-large">Contact Me</a>
+                </div>
+                <div class="trust-indicators">
+                    <div class="trust-item">
+                        <i class="ph ph-check-circle"></i>
+                        <span>Access to 50+ Lenders</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="ph ph-check-circle"></i>
+                        <span>Zero Hidden Fees</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image-wrapper">
+                <div class="glass-card hero-stats">
+                    <div class="stat-row">
+                        <div class="stat-icon"><i class="ph ph-trend-down"></i></div>
+                        <div class="stat-text">
+                            <span class="stat-label">Current Lowest Rate</span>
+                            <span class="stat-value">4.49%</span>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-icon"><i class="ph ph-users"></i></div>
+                        <div class="stat-text">
+                            <span class="stat-label">Happy Families</span>
+                            <span class="stat-value">500+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Tailored Mortgage Solutions</h2>
+                <p>Expert guidance for every step of your homeownership journey.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="ph ph-house"></i></div>
+                    <h3>First-Time Buyers</h3>
+                    <p>Step-by-step guidance to help you navigate your first home purchase with confidence and ease.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="ph ph-arrows-clockwise"></i></div>
+                    <h3>Mortgage Renewals</h3>
+                    <p>Don't just sign your bank's renewal letter. Let us shop the market to secure a better rate for you.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="ph ph-wallet"></i></div>
+                    <h3>Refinancing</h3>
+                    <p>Unlock your home's equity to consolidate debt, renovate, or invest in your future.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="ph ph-buildings"></i></div>
+                    <h3>Investment Properties</h3>
+                    <p>Strategic financing options to help you build and scale your real estate portfolio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section" id="calculator">
+        <div class="container calculator-container">
+            <div class="calculator-content">
+                <h2>Plan Your Future</h2>
+                <p>Use our interactive mortgage calculator to estimate your monthly payments and see what you can afford.</p>
+                <ul class="calc-benefits">
+                    <li><i class="ph ph-check"></i> Instant payment estimation</li>
+                    <li><i class="ph ph-check"></i> Adjust rates and amortization</li>
+                    <li><i class="ph ph-check"></i> See the impact of your down payment</li>
+                </ul>
+            </div>
+            <div class="calculator-card glass-card" id="affordability-calc">
+                <h3>Affordability Calculator</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="annual-income">Gross Annual Income ($)</label>
+                        <input type="number" id="annual-income" value="120000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="monthly-debts">Monthly Debts ($)</label>
+                        <input type="number" id="monthly-debts" value="500" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="down-payment">Down Payment ($)</label>
+                        <input type="number" id="down-payment" value="50000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="interest-rate">Interest Rate (%)</label>
+                        <input type="number" id="interest-rate" value="4.99" step="0.01">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="calc-location">Desired Location (City)</label>
+                    <input type="text" id="calc-location" placeholder="e.g. Toronto, ON">
+                </div>
+                <div class="calculator-result" style="padding-bottom: 1rem;">
+                    <span class="result-label">Max Purchase Price</span>
+                    <span class="result-value" id="max-purchase-price" style="font-size: 2rem;">$0</span>
+                    <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="result-label">Max Mortgage</span>
+                            <span id="max-mortgage" style="font-weight: 600;">$0</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="result-label">Est. Payment</span>
+                            <span id="monthly-payment" style="font-weight: 600;">$0</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="realtor-btn" class="btn btn-primary btn-block" style="margin-top: 1.5rem;">Find Homes on Realtor.ca</button>
+                <p class="calc-disclaimer">*Based on standard Canadian stress test (higher of 5.25% or contract + 2%), 39% GDS / 44% TDS, and 25-yr amortization.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="blog-section" id="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2>Mortgage Market Update</h2>
+                <p>The latest news and trends from Canadian Mortgage Trends</p>
+            </div>
+            <div class="glass-card blog-card">
+                <div class="blog-header">
+                    <span class="blog-date">May 19, 2026</span>
+                    <h3>Ontario & Canada Mortgage News</h3>
+                </div>
+                <div class="blog-content">
+                    <ul>
+                        <li><strong>Inflation Rises Slightly:</strong> Canadian inflation rose to 2.8% in April, largely driven by energy prices, though core measures of inflation cooled. This adds slight uncertainty to the Bank of Canada's rate path.</li>
+                        <li><strong>Spring Market Thaw:</strong> The Canadian Real Estate Association (CREA) reported that April home sales fell compared with a year ago, as buyers remain hesitant despite the busy spring season.</li>
+                        <li><strong>Construction Push:</strong> The federal government is sticking to its pledge to double the pace of home building across the country, even as the construction industry faces economic headwinds.</li>
+                        <li><strong>Variable Rate Popularity:</strong> The CMHC notes that borrowers are increasingly turning to variable-rate and shorter-term mortgages as renewal pressures begin to ease.</li>
+                    </ul>
+                    <a href="https://www.canadianmortgagetrends.com/" target="_blank" class="blog-source">Source: Canadian Mortgage Trends</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container contact-container">
+            <div class="contact-info">
+                <h2>Let's Talk About Your Mortgage</h2>
+                <p>Ready to get started or just have some questions? Fill out the form and I'll get back to you within 24 hours.</p>
+                <div class="info-items">
+                    <div class="info-item">
+                        <i class="ph ph-phone"></i>
+                        <span>705-358-4258</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="ph ph-envelope-simple"></i>
+                        <span>bailey.bucher@teambreezeful.com</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="ph ph-map-pin"></i>
+                        <span>Serving all of Ontario</span>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form-wrapper">
+                <form id="lead-form" class="glass-card" action="https://formspree.io/f/maqkqbor" method="POST">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="First Name" required placeholder="Jane">
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" name="Last Name" required placeholder="Doe">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="Email Address" required placeholder="jane@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="Phone Number" placeholder="(416) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="goal">What can I help you with?</label>
+                        <select id="goal" name="Consultation Reason" required>
+                            <option value="" disabled selected>Select an option...</option>
+                            <option value="first-time">Buying my first home</option>
+                            <option value="renewal">Mortgage Renewal</option>
+                            <option value="refinance">Refinancing</option>
+                            <option value="investment">Investment Property</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="_subject" value="New Website Lead - Mortgages with Bailey">
+                    <button type="submit" class="btn btn-primary btn-block">Request Consultation</button>
+                    <p class="form-success" id="form-success-msg" style="display: none;">Thanks! I'll be in touch soon.</p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <div class="logo">
+                    <i class="ph ph-house-line"></i>
+                    <span>Mortgages with Bailey</span>
+                </div>
+                <p>Expert mortgage advice and tailored solutions for Ontario residents.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="#services">Services</a>
+                <a href="#calculator">Calculator</a>
+                <a href="#blog">Blog</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-social">
+                <h4>Social Media</h4>
+                <a href="https://facebook.com/MortgageswithBailey" target="_blank">Facebook</a>
+                <a href="https://instagram.com/mortgageswithbailey" target="_blank">Instagram</a>
+                <a href="https://tiktok.com/@mortgageswithbailey" target="_blank">TikTok</a>
+            </div>
+            <div class="footer-legal">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <p class="fsra-text">FSRA License #M22004070<br>Breezeful Brokerage #13470</p>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2026 Mortgages with Bailey. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
