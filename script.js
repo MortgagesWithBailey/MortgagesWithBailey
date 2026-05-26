@@ -114,6 +114,265 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Amortization Modal & Chart Logic
+    const amortizationBtn = document.getElementById('amortization-btn');
+    const amortizationModal = document.getElementById('amortization-modal');
+    const closeModalBtn = document.querySelector('.close-modal');
+    const prepBtns = document.querySelectorAll('.prep-btn');
+    const payoffTimeDisplay = document.getElementById('payoff-time');
+    const interestSavedDisplay = document.getElementById('interest-saved');
+    let amortChart = null;
+
+    if (amortizationBtn && amortizationModal) {
+        amortizationBtn.addEventListener('click', () => {
+            amortizationModal.style.display = 'block';
+            
+            // Reset to 0% active button when opening
+            prepBtns.forEach(b => b.classList.remove('active'));
+            document.querySelector('.prep-btn[data-percent="0"]').classList.add('active');
+            
+            renderChart(0); // Default to 0 prepayment
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            amortizationModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === amortizationModal) {
+                amortizationModal.style.display = 'none';
+            }
+        });
+
+        prepBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                prepBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                const prepPercent = parseInt(e.target.getAttribute('data-percent'));
+                renderChart(prepPercent);
+            });
+        });
+    }
+
+    function calculateAmortizationSchedule(principal, rate, years, annualPrepaymentPercent) {
+        const monthlyRate = (rate / 100) / 12;
+        const totalMonths = years * 12;
+        
+        let balance = principal;
+        let c = 0;
+        if (monthlyRate > 0) {
+            c = (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+        } else {
+            c = 1 / totalMonths;
+        }
+        
+        const monthlyPayment = principal * c;
+        const annualPrepaymentAmount = principal * (annualPrepaymentPercent / 100);
+        
+        const balances = [principal];
+        let totalInterest = 0;
+        let monthsTaken = 0;
+
+        for (let m = 1; m <= totalMonths && balance > 0; m++) {
+            const interest = balance * monthlyRate;
+            totalInterest += interest;
+            let principalPaid = monthlyPayment - interest;
+            
+            // Apply annual prepayment at the end of every 12th month
+            if (m % 12 === 0 && annualPrepaymentPercent > 0) {
+                principalPaid += annualPrepaymentAmount;
+            }
+
+            balance -= principalPaid;
+            if (balance < 0) balance = 0;
+            
+            // Record balance yearly to make the chart cleaner
+            if (m % 12 === 0 || balance === 0) {
+                balances.push(balance);
+            }
+            monthsTaken = m;
+        }
+        
+        return {
+            balances,
+            totalInterest,
+            monthsTaken
+        };
+    }
+
+    function renderChart(prepPercent) {
+        const downPayment = parseFloat(downPaymentInput.value) || 0;
+        const principal = currentMaxPrice - downPayment;
+        const rate = parseFloat(interestRateInput.value) || 0;
+        
+        if (principal <= 0) return;
+
+        // Baseline (0% prepayment)
+        const baseSchedule = calculateAmortizationSchedule(principal, rate, 25, 0);
+        // Prepayment Schedule
+        const prepSchedule = calculateAmortizationSchedule(principal, rate, 25, prepPercent);
+
+        // Generate labels for X axis (Years)
+        const maxYears = Math.max(Math.ceil(baseSchedule.monthsTaken / 12), Math.ceil(prepSchedule.monthsTaken / 12));
+        const labels = Array.from({length: maxYears + 1}, (_, i) => `Year ${i}`);
+
+        if (amortChart) {
+            amortChart.destroy();
+        }
+
+        const ctx = document.getElementById('amortizationChart').getContext('2d');
+        
+        Chart.defaults.color = '#cbd5e1'; // Set global chart text color to match theme
+        
+        amortChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Balance (No Prepayment)',
+                        data: baseSchedule.balances,
+                        borderColor: 'rgba(203, 213, 225, 0.5)', // Muted color for baseline
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: `Balance (${prepPercent}% Prepayment)`,
+                        data: prepSchedule.balances,
+                        borderColor: '#f59e0b', // Accent amber
+                        backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                        fill: true,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#f8fafc'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000).toFixed(0) + 'k'; // Format as $500k
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const yearsTaken = (prepSchedule.monthsTaken / 12).toFixed(1);
+        payoffTimeDisplay.textContent = `${yearsTaken} Years`;
+
+        const interestSaved = baseSchedule.totalInterest - prepSchedule.totalInterest;
+        const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+        interestSavedDisplay.textContent = formatCurrency(interestSaved > 0 ? interestSaved : 0);
+    }
+    
+    // Break Penalty Modal Logic
+    const penaltyBtn = document.getElementById('penalty-btn');
+    const penaltyModal = document.getElementById('penalty-modal');
+    const closePenaltyBtn = document.getElementById('close-penalty');
+    
+    const penaltyMortgageType = document.getElementById('mortgage-type');
+    const penaltyBalance = document.getElementById('penalty-balance');
+    const penaltyMonths = document.getElementById('penalty-months');
+    const penaltyContractRate = document.getElementById('penalty-contract-rate');
+    const penaltyMarketRate = document.getElementById('penalty-market-rate');
+    const marketRateGroup = document.getElementById('market-rate-group');
+    const estPenaltyCost = document.getElementById('est-penalty-cost');
+    const penaltyExplanation = document.getElementById('penalty-explanation');
+
+    if (penaltyBtn && penaltyModal) {
+        penaltyBtn.addEventListener('click', () => {
+            penaltyModal.style.display = 'block';
+            calculatePenalty();
+        });
+
+        closePenaltyBtn.addEventListener('click', () => {
+            penaltyModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === penaltyModal) {
+                penaltyModal.style.display = 'none';
+            }
+        });
+
+        // Toggle Market Rate visibility based on Mortgage Type
+        penaltyMortgageType.addEventListener('change', () => {
+            if (penaltyMortgageType.value === 'variable') {
+                marketRateGroup.style.display = 'none';
+            } else {
+                marketRateGroup.style.display = 'block';
+            }
+            calculatePenalty();
+        });
+
+        // Recalculate on input changes
+        [penaltyBalance, penaltyMonths, penaltyContractRate, penaltyMarketRate].forEach(input => {
+            input.addEventListener('input', calculatePenalty);
+        });
+    }
+
+    function calculatePenalty() {
+        const type = penaltyMortgageType.value;
+        const balance = parseFloat(penaltyBalance.value) || 0;
+        const months = parseInt(penaltyMonths.value) || 0;
+        const contractRate = parseFloat(penaltyContractRate.value) || 0;
+        const marketRate = parseFloat(penaltyMarketRate.value) || 0;
+
+        const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+
+        if (balance <= 0) {
+            estPenaltyCost.textContent = '$0';
+            penaltyExplanation.textContent = 'Please enter a valid balance.';
+            return;
+        }
+
+        // 3 Months Interest Calculation
+        const threeMonthsInterest = balance * (contractRate / 100 / 12) * 3;
+
+        if (type === 'variable') {
+            estPenaltyCost.textContent = formatCurrency(threeMonthsInterest);
+            penaltyExplanation.textContent = 'Based on standard 3-months interest for Variable rates.';
+        } else {
+            // IRD Calculation
+            let rateDiff = (contractRate - marketRate) / 100;
+            if (rateDiff < 0) rateDiff = 0; // IRD is 0 if market rate is higher
+            
+            const ird = balance * rateDiff * (months / 12);
+            
+            if (ird > threeMonthsInterest) {
+                estPenaltyCost.textContent = formatCurrency(ird);
+                penaltyExplanation.textContent = `Based on Interest Rate Differential (IRD) as it is greater than 3-months interest (${formatCurrency(threeMonthsInterest)}).`;
+            } else {
+                estPenaltyCost.textContent = formatCurrency(threeMonthsInterest);
+                if (ird > 0) {
+                    penaltyExplanation.textContent = `Based on 3-months interest as it is greater than the IRD (${formatCurrency(ird)}).`;
+                } else {
+                    penaltyExplanation.textContent = `Based on 3-months interest. IRD does not apply because the market rate is higher than your contract rate.`;
+                }
+            }
+        }
+    }
     // Form Submission Handling via Formspree
     const leadForm = document.getElementById('lead-form');
     const successMsg = document.getElementById('form-success-msg');

@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Phosphor Icons for premium aesthetic -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Chart.js for Amortization Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -151,6 +153,10 @@
                     </div>
                 </div>
                 <button id="realtor-btn" class="btn btn-primary btn-block" style="margin-top: 1.5rem;">Find Homes on Realtor.ca</button>
+                <div style="display: flex; gap: 10px; margin-top: 0.75rem;">
+                    <button id="amortization-btn" class="btn btn-secondary btn-block" style="flex: 1; font-size: 0.9rem; padding: 0.75rem;">Amortization</button>
+                    <button id="penalty-btn" class="btn btn-secondary btn-block" style="flex: 1; font-size: 0.9rem; padding: 0.75rem; margin-top: 0;">Break Penalty</button>
+                </div>
                 <p class="calc-disclaimer">*These are estimates. Based on standard Canadian stress test (higher of 5.25% or contract + 2%), 39% GDS / 44% TDS, and 25-yr amortization.</p>
             </div>
         </div>
@@ -165,15 +171,15 @@
             </div>
             <div class="glass-card blog-card">
                 <div class="blog-header">
-                    <span class="blog-date">May 19, 2026</span>
+                    <span class="blog-date">May 26, 2026</span>
                     <h3>Ontario & Canada Mortgage News</h3>
                 </div>
                 <div class="blog-content">
                     <ul>
-                        <li><strong>Inflation Rises Slightly:</strong> Canadian inflation rose to 2.8% in April, largely driven by energy prices, though core measures of inflation cooled. This adds slight uncertainty to the Bank of Canada's rate path.</li>
-                        <li><strong>Spring Market Thaw:</strong> The Canadian Real Estate Association (CREA) reported that April home sales fell compared with a year ago, as buyers remain hesitant despite the busy spring season.</li>
-                        <li><strong>Construction Push:</strong> The federal government is sticking to its pledge to double the pace of home building across the country, even as the construction industry faces economic headwinds.</li>
-                        <li><strong>Variable Rate Popularity:</strong> The CMHC notes that borrowers are increasingly turning to variable-rate and shorter-term mortgages as renewal pressures begin to ease.</li>
+                        <li><strong>AI in Mortgages:</strong> TD Bank has officially launched an "agentic AI" system to help process new mortgage and HELOC applications, signaling a major shift toward faster approvals in the banking sector.</li>
+                        <li><strong>Cottages Over Condos:</strong> As urban affordability remains tight, many buyers are pivoting toward recreational properties and rural homes as an alternative path to entering the real estate market.</li>
+                        <li><strong>Construction Push:</strong> The federal government is sticking to its pledge to double the pace of home building across the country, even as the construction industry continues to face severe economic headwinds.</li>
+                        <li><strong>More Lending Options:</strong> National Bank is expanding its prime mortgage products nationwide through the broker channel, giving independent mortgage agents access to even more competitive lending options for clients!</li>
                     </ul>
                     <a href="https://www.canadianmortgagetrends.com/" target="_blank" class="blog-source">Source: Canadian Mortgage Trends</a>
                 </div>
@@ -275,6 +281,86 @@
             <p>&copy; 2026 Mortgages with Bailey. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Amortization Modal -->
+    <div id="amortization-modal" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-modal"><i class="ph ph-x"></i></span>
+            <h2>Amortization & Prepayment Simulator</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">See how extra annual lump-sum payments affect your mortgage timeline and interest.</p>
+            
+            <div class="prepayment-controls">
+                <span>Annual Prepayment:</span>
+                <button class="prep-btn active" data-percent="0">None</button>
+                <button class="prep-btn" data-percent="5">5%</button>
+                <button class="prep-btn" data-percent="10">10%</button>
+                <button class="prep-btn" data-percent="15">15%</button>
+                <button class="prep-btn" data-percent="20">20%</button>
+            </div>
+
+            <div class="amortization-stats">
+                <div class="stat-box">
+                    <span class="stat-box-label">Payoff Time</span>
+                    <span class="stat-box-value" id="payoff-time">25 Years</span>
+                </div>
+                <div class="stat-box highlight-box">
+                    <span class="stat-box-label">Total Interest Saved</span>
+                    <span class="stat-box-value" id="interest-saved">$0</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="amortizationChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Break Penalty Modal -->
+    <div id="penalty-modal" class="modal">
+        <div class="modal-content glass-card" style="max-width: 500px;">
+            <span class="close-modal" id="close-penalty"><i class="ph ph-x"></i></span>
+            <h2>Break Penalty Estimator</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Estimate the cost to break your current mortgage early.</p>
+            
+            <div class="form-row">
+                <div class="form-group" style="width: 100%;">
+                    <label for="mortgage-type">Mortgage Type</label>
+                    <select id="mortgage-type" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: white; outline: none;">
+                        <option value="fixed" style="color: black;">Fixed Rate</option>
+                        <option value="variable" style="color: black;">Variable Rate</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="penalty-balance">Outstanding Balance ($)</label>
+                    <input type="number" id="penalty-balance" value="350000" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="penalty-months">Months Remaining</label>
+                    <input type="number" id="penalty-months" value="24" min="1">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="penalty-contract-rate">Your Current Rate (%)</label>
+                    <input type="number" id="penalty-contract-rate" value="3.5" step="0.01">
+                </div>
+                <div class="form-group" id="market-rate-group">
+                    <label for="penalty-market-rate">Current Market Rate (%)</label>
+                    <input type="number" id="penalty-market-rate" value="5.0" step="0.01">
+                </div>
+            </div>
+
+            <div class="calculator-result" style="margin-top: 1.5rem;">
+                <span class="result-label">Estimated Penalty</span>
+                <span class="result-value" id="est-penalty-cost" style="font-size: 2rem;">$0</span>
+                <p id="penalty-explanation" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; text-align: center;">Calculation method will appear here.</p>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
